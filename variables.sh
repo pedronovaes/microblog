@@ -1,0 +1,2 @@
+export FLASK_RUN=microblog.py
+export PYTHONDONTWRITEBYTECODE=1
