@@ -227,3 +227,34 @@ def reset_password(token):
         return redirect(url_for('login'))
 
     return render_template('reset_password.html', form=form)
+
+
+@app.route('/delete/<id>')
+@login_required
+def delete_post(id):
+    post = Post.query.filter_by(id=id).first()
+
+    if post is None:
+        flash('Post can not be deleted')
+        return redirect(url_for('index'))
+
+    db.session.delete(post)
+    db.session.commit()
+    flash('Your post has been deleted')
+
+    return redirect(url_for('index'))
+
+
+@app.route('/delete_profile/')
+@login_required
+def delete_profile():
+    user_posts = Post.query.filter_by(user_id=current_user.id).all()
+
+    if user_posts is not None:
+        for post in user_posts:
+            db.session.delete(post)
+
+    db.session.delete(current_user)
+    db.session.commit()
+
+    return redirect(url_for('logout'))
